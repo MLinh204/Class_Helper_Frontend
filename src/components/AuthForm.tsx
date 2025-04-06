@@ -3,6 +3,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { login, register } from '@/utils/api';
+import { isAxiosError } from '@/utils/errorUtils';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -20,7 +21,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     age: '',
     address: '',
   });
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -52,9 +53,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
       }
       // Redirect to the home page on success
       router.push('/');
-    } catch (err: any) {
-      // Handle error and display a message to the user
-      setError(err.response?.data?.message || 'An error occurred.');
+    } catch (error: unknown) {
+      console.error("Error: ", error);
+      if (isAxiosError(error) && error.response.data.message) {
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

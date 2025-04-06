@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import NavigationBar from '@/components/NavigationBar';
 import StudentCard from '@/components/StudentCard';
 import { getAllStudents, searchStudents } from '@/utils/api';
@@ -13,7 +12,6 @@ interface Student {
 }
 
 const HomePage = () => {
-  const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);

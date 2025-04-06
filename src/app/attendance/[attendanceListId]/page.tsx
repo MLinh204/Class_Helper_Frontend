@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import NavigationBar from '@/components/NavigationBar';
 import { getAttendanceRecordByListId, getStudentById, checkAttendance, getStudentByUserId, getAttendanceById } from '@/utils/api';
-import { jwtDecode } from 'jwt-decode';
 
 interface AttendanceRecord {
   id: number;
@@ -22,12 +21,6 @@ interface Student {
   profile_image?: string;
 }
 
-interface DecodedToken {
-  id: number;
-  exp: number;
-  iat: number;
-}
-
 const AttendanceDetailPage = ({ params }: { params: Promise<{ attendanceListId: string }> }) => {
   // Unwrap the promise for params using React.use()
   const resolvedParams = React.use(params);
@@ -40,7 +33,7 @@ const AttendanceDetailPage = ({ params }: { params: Promise<{ attendanceListId: 
   const [currentStudentId, setCurrentStudentId] = useState<number | null>(null);
   const [attendanceListStatus, setAttendanceListStatus] = useState<string>('open');
 
-  const fetchStudentIdFromUserId = async (token: string) => {
+  const fetchStudentIdFromUserId = async () => {
     try {
       if (typeof window === 'undefined') return; // Make sure this runs only on client
   
@@ -134,7 +127,7 @@ const AttendanceDetailPage = ({ params }: { params: Promise<{ attendanceListId: 
       }
 
       // Fetch the student ID
-      await fetchStudentIdFromUserId(token);
+      await fetchStudentIdFromUserId();
       // Fetch attendance records
       await fetchAttendanceRecords();
     };

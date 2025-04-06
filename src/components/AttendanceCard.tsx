@@ -20,6 +20,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({ attendance }) => {
       const date = new Date(dateString);
       return format(date, 'MMM dd, yyyy HH:mm');
     } catch (error) {
+      console.error('Error formatting date:', error);
       return 'Invalid date';
     }
   };

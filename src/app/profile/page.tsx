@@ -4,6 +4,7 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { getStudentById, updateStudent } from '@/utils/api';
 import NavigationBar from '@/components/NavigationBar';
+import { isAxiosError } from '@/utils/errorUtils';
 
 interface Student {
   id: number;
@@ -22,7 +23,7 @@ const ProfilePage: React.FC = () => {
   const [student, setStudent] = useState<Student | null>(null);
   const [formData, setFormData] = useState<Partial<Student>>({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,9 +51,13 @@ const ProfilePage: React.FC = () => {
           nickname: studentData.nickname
         });
         setLoading(false);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load profile data');
-        setLoading(false);
+      } catch (error: unknown) {
+        console.error("Error: ", error);
+        if (isAxiosError(error) && error.response.data.message) {
+          alert(`Error: ${error.response.data.message}`);
+        } else {
+          alert("Failed to load student data. Please try again.");
+        }
       }
     };
 
@@ -80,9 +85,13 @@ const ProfilePage: React.FC = () => {
       });
       setLoading(false);
       setTimeout(() => setSuccess(null), 3000);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update profile');
-      setLoading(false);
+    } catch (error: unknown) {
+      console.error("Error: ", error);
+      if (isAxiosError(error) && error.response.data.message) {
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        alert("Failed to update profile. Please try again.");
+      }
     }
   };
 

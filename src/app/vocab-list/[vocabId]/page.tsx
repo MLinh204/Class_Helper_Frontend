@@ -462,7 +462,7 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
                     </div>
                     <div className="flex">
                       <span className="w-32 font-semibold text-gray-700">Example:</span>
-                      <span className="italic text-gray-700">"{vocab.example_sentence}"</span>
+                      <span className="italic text-gray-700">{vocab.example_sentence}</span>
                     </div>
                     {vocab.synonyms && (
                       <div className="flex">

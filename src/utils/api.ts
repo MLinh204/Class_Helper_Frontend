@@ -20,8 +20,8 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 // Authentication endpoints
-export const register = (data: any) => api.post('/auth/register', data);
-export const login = (data: any) => api.post('/auth/login', data);
+export const register = (data: Record<string, unknown>) => api.post('/auth/register', data);
+export const login = (data: Record<string, unknown>) => api.post('/auth/login', data);
 export const logout = () => api.post('/auth/logout');
 export const refreshToken = () => api.post('/auth/refresh-token');
 
@@ -29,19 +29,19 @@ export const refreshToken = () => api.post('/auth/refresh-token');
 export const getAllStudents = () => api.get('/student/all');
 export const searchStudents = (q: string) => api.get(`/student/search?q=${q}`);
 export const getStudentById = (id: number) => api.get(`/student/${id}`);
-export const createStudent = (data: any) => api.post('/student', data);
-export const updateStudent = (id: number, data: any) => api.put(`/student/${id}`, data);
+export const createStudent = (data: Record<string, unknown>) => api.post('/student', data);
+export const updateStudent = (id: number, data: Record<string, unknown>) => api.put(`/student/${id}`, data);
 export const deleteStudent = (id: number) => api.delete(`/student/${id}`);
 export const getStudentByUserId = (userId: number) => api.get(`/student/user/${userId}`);
 
 // Attendance endpoints
 export const getAllAttendance = () => api.get('/attendanceList/all');
 export const getAttendanceById = (id: number) => api.get(`/attendanceList/${id}`);
-export const createAttendance = (data: any) => api.post('/attendanceList', data);
-export const updateAttendance = (id: number, data: any) => api.put(`/attendanceList/${id}`, data);
+export const createAttendance = (data: Record<string, unknown>) => api.post('/attendanceList', data);
+export const updateAttendance = (id: number, data: Record<string, unknown>) => api.put(`/attendanceList/${id}`, data);
 export const deleteAttendance = (id: number) => api.delete(`/attendanceList/${id}`);
 export const getAttendanceRecordByListId = (listId: number) => api.get(`/attendanceRecord/list/${listId}`);
-export const checkAttendance = (id: number, data: any) => api.put(`/attendanceRecord/record/${id}`, data);
+export const checkAttendance = (id: number, data: Record<string, unknown>) => api.put(`/attendanceRecord/record/${id}`, data);
 export const searchAttendanceList = (q: string) => api.get(`/attendanceList/search?query=${q}`);
 
 
@@ -50,8 +50,8 @@ export const getAllVocabLists = () => api.get(`/vocabList/all`);
 export const getVocabListById = (id: number) => api.get(`/vocabList/${id}`);
 export const searchVocabList = (query: string) => api.get(`/vocabList/search?query=${query}`);
 export const getVocabByListId = (id: number) => api.get(`/vocab/list/${id}`);
-export const createVocab = (id: number, data: any) => api.post(`/vocab/list/${id}`, data);
-export const updateVocab = (id: number, data: any) => api.put(`/vocab/${id}`, data);
+export const createVocab = (id: number, data: Record<string, unknown>) => api.post(`/vocab/list/${id}`, data);
+export const updateVocab = (id: number, data: Record<string, unknown>) => api.put(`/vocab/${id}`, data);
 export const searchVocabViaListId = (id: number, query: string) => api.get(`/vocab/list/${id}/search?query=${query}`);
 
 export default api;
