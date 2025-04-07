@@ -53,5 +53,6 @@ export const getVocabByListId = (id: number) => api.get(`/vocab/list/${id}`);
 export const createVocab = (id: number, data: Record<string, unknown>) => api.post(`/vocab/list/${id}`, data);
 export const updateVocab = (id: number, data: Record<string, unknown>) => api.put(`/vocab/${id}`, data);
 export const searchVocabViaListId = (id: number, query: string) => api.get(`/vocab/list/${id}/search?query=${query}`);
+export const sortVocabViaListId = (id: number, column: string, order: string) => api.get(`/vocab/list/${id}/sort?column=${column}&order=${order}`);
 
 export default api;

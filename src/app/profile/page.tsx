@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { getStudentById, updateStudent } from '@/utils/api';
+import { getStudentById, getStudentByUserId, updateStudent } from '@/utils/api';
 import NavigationBar from '@/components/NavigationBar';
 import { isAxiosError } from '@/utils/errorUtils';
 
@@ -41,7 +41,9 @@ const ProfilePage: React.FC = () => {
         }
         const user = JSON.parse(userStr);
         const userId: number = user.id;
-        const response = await getStudentById(userId);
+        const res = await getStudentByUserId(userId);
+        const studentId: number = res.data.id;
+        const response = await getStudentById(studentId);
         const studentData = response.data;
         setStudent(studentData);
         setFormData({
