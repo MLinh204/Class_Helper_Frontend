@@ -66,38 +66,39 @@ const AttendancePage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-id="attendance-page-container">
       <NavigationBar />
-      <div className="max-w-7xl mx-auto p-4">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Attendance Lists</h1>
-          <form onSubmit={handleSearch} className='mb-4'>
+      <div className="max-w-7xl mx-auto p-4" data-id="attendance-main-content">
+        <div className="mb-6" data-id="attendance-header-section">
+          <h1 className="text-2xl font-bold text-gray-900" data-id="attendance-page-title">Attendance Lists</h1>
+          <form onSubmit={handleSearch} className='mb-4' data-id="attendance-search-form">
           <input
             type="text"
             placeholder="Search attendance lists..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            data-id="attendance-search-input"
           />
           </form>
         </div>
         
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center items-center h-64" data-id="attendance-loading-container">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" data-id="attendance-loading-spinner"></div>
           </div>
         ) : error ? (
-          <div className="text-red-500 text-lg font-semibold text-center my-8">
+          <div className="text-red-500 text-lg font-semibold text-center my-8" data-id="attendance-error-message">
             {error}
           </div>
         ) : filteredAttendances.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-id="attendance-cards-grid">
             {filteredAttendances.map((attendance) => (
               <AttendanceCard key={attendance.id} attendance={attendance} />
             ))}
           </div>
         ) : (
-          <div className="text-gray-500 text-center my-16 text-lg">
+          <div className="text-gray-500 text-center my-16 text-lg" data-id="attendance-empty-state">
             {searchQuery ? 'No attendance lists match your search' : 'No attendance lists available'}
           </div>
         )}

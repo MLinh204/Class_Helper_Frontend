@@ -242,22 +242,22 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
     handleSubmit: (e: React.FormEvent) => void
   ) => {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-blue-200">
-        <h2 className="text-xl font-bold text-blue-800 mb-4">
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-blue-200" data-id={`vocab-form-${isEdit ? 'edit' : 'create'}`}>
+        <h2 className="text-xl font-bold text-blue-800 mb-4" data-id={`vocab-form-title-${isEdit ? 'edit' : 'create'}`}>
           {isEdit ? 'Edit Vocabulary' : 'Create New Vocabulary'}
         </h2>
         
         {formError && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
+          <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4" data-id={`vocab-form-error-${isEdit ? 'edit' : 'create'}`}>
             {formError}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4" data-id={`vocab-form-element-${isEdit ? 'edit' : 'create'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-id={`vocab-form-grid-${isEdit ? 'edit' : 'create'}`}>
             {/* Word */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Word</label>
+            <div data-id={`vocab-form-word-field-${isEdit ? 'edit' : 'create'}`}>
+              <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-word-label-${isEdit ? 'edit' : 'create'}`}>Word</label>
               <input
                 type="text"
                 name="word"
@@ -265,12 +265,13 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
                 onChange={handleChange}
                 required
                 className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-id={`vocab-form-word-input-${isEdit ? 'edit' : 'create'}`}
               />
             </div>
             
             {/* Translation */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Translation</label>
+            <div data-id={`vocab-form-translation-field-${isEdit ? 'edit' : 'create'}`}>
+              <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-translation-label-${isEdit ? 'edit' : 'create'}`}>Translation</label>
               <input
                 type="text"
                 name="translation"
@@ -278,18 +279,20 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
                 onChange={handleChange}
                 required
                 className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-id={`vocab-form-translation-input-${isEdit ? 'edit' : 'create'}`}
               />
             </div>
             
             {/* Part of Speech */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Part of Speech</label>
+            <div data-id={`vocab-form-pos-field-${isEdit ? 'edit' : 'create'}`}>
+              <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-pos-label-${isEdit ? 'edit' : 'create'}`}>Part of Speech</label>
               <select
                 name="part_of_speech"
                 value={formData.part_of_speech}
                 onChange={handleChange}
                 required
                 className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-id={`vocab-form-pos-select-${isEdit ? 'edit' : 'create'}`}
               >
                 <option value="noun">Noun</option>
                 <option value="verb">Verb</option>
@@ -304,8 +307,8 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
           </div>
           
           {/* Definition */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Definition</label>
+          <div data-id={`vocab-form-definition-field-${isEdit ? 'edit' : 'create'}`}>
+            <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-definition-label-${isEdit ? 'edit' : 'create'}`}>Definition</label>
             <textarea
               name="definition"
               value={formData.definition}
@@ -313,12 +316,13 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
               required
               rows={2}
               className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              data-id={`vocab-form-definition-input-${isEdit ? 'edit' : 'create'}`}
             />
           </div>
           
           {/* Example Sentence */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Example Sentence</label>
+          <div data-id={`vocab-form-example-field-${isEdit ? 'edit' : 'create'}`}>
+            <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-example-label-${isEdit ? 'edit' : 'create'}`}>Example Sentence</label>
             <textarea
               name="example_sentence"
               value={formData.example_sentence}
@@ -326,13 +330,14 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
               required
               rows={2}
               className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              data-id={`vocab-form-example-input-${isEdit ? 'edit' : 'create'}`}
             />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-id={`vocab-form-synonyms-antonyms-grid-${isEdit ? 'edit' : 'create'}`}>
             {/* Synonyms */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Synonyms</label>
+            <div data-id={`vocab-form-synonyms-field-${isEdit ? 'edit' : 'create'}`}>
+              <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-synonyms-label-${isEdit ? 'edit' : 'create'}`}>Synonyms</label>
               <input
                 type="text"
                 name="synonyms"
@@ -340,28 +345,31 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
                 onChange={handleChange}
                 required
                 className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-id={`vocab-form-synonyms-input-${isEdit ? 'edit' : 'create'}`}
               />
             </div>
             
             {/* Antonyms */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Antonyms (optional)</label>
+            <div data-id={`vocab-form-antonyms-field-${isEdit ? 'edit' : 'create'}`}>
+              <label className="block text-gray-700 font-medium mb-1" data-id={`vocab-form-antonyms-label-${isEdit ? 'edit' : 'create'}`}>Antonyms (optional)</label>
               <input
                 type="text"
                 name="antonyms"
                 value={formData.antonyms}
                 onChange={handleChange}
                 className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-id={`vocab-form-antonyms-input-${isEdit ? 'edit' : 'create'}`}
               />
             </div>
           </div>
           
-          <div className="flex justify-end space-x-3 pt-2">
+          <div className="flex justify-end space-x-3 pt-2" data-id={`vocab-form-buttons-${isEdit ? 'edit' : 'create'}`}>
             <button
               type="button"
               onClick={isEdit ? () => setEditingVocabId(null) : handleCreateVocab}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
               disabled={formSubmitting}
+              data-id={`vocab-form-cancel-button-${isEdit ? 'edit' : 'create'}`}
             >
               Cancel
             </button>
@@ -369,6 +377,7 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
               type="submit"
               className={`px-4 py-2 ${formSubmitting ? 'bg-blue-400' : 'bg-blue-600'} text-white rounded hover:bg-blue-700`}
               disabled={formSubmitting}
+              data-id={`vocab-form-submit-button-${isEdit ? 'edit' : 'create'}`}
             >
               {formSubmitting ? 'Saving...' : isEdit ? 'Update Vocabulary' : 'Create Vocabulary'}
             </button>
@@ -379,30 +388,32 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-id="vocab-detail-page-container">
       <NavigationBar />
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-4xl font-extrabold">{vocabList?.title || 'Vocabulary List'}</h1>
+      <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-12" data-id="vocab-detail-hero-section">
+        <div className="max-w-7xl mx-auto px-6" data-id="vocab-detail-hero-content">
+          <h1 className="text-4xl font-extrabold" data-id="vocab-detail-title">{vocabList?.title || 'Vocabulary List'}</h1>
         </div>
       </div>
 
       {/* Actions: Search & Create */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex flex-col md:flex-row items-center gap-4">
-          <form onSubmit={handleSearch} className="flex-grow w-full">
+      <div className="max-w-7xl mx-auto px-6 py-8" data-id="vocab-detail-actions-section">
+        <div className="flex flex-col md:flex-row items-center gap-4" data-id="vocab-detail-actions-wrapper">
+          <form onSubmit={handleSearch} className="flex-grow w-full" data-id="vocab-detail-search-form">
             <input
               type="text"
               placeholder="Search vocabularies..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              data-id="vocab-detail-search-input"
             />
           </form>
           <button
             onClick={handleCreateVocab}
             className="px-6 py-4 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            data-id="vocab-detail-create-button"
           >
             Create New Vocab
           </button>
@@ -410,77 +421,79 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
       </div>
       
       {/* Create Form (conditional) */}
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6" data-id="vocab-detail-create-form-section">
         {showCreateForm && renderVocabForm(false, createFormData, handleCreateFormChange, handleCreateVocabSubmit)}
       </div>
 
       {/* Vocabulary Cards */}
-      <div className="max-w-7xl mx-auto px-6 pb-12">
+      <div className="max-w-7xl mx-auto px-6 pb-12" data-id="vocab-detail-cards-section">
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+          <div className="flex justify-center items-center h-64" data-id="vocab-detail-loading-container">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500" data-id="vocab-detail-loading-spinner"></div>
           </div>
         ) : error ? (
-          <div className="text-red-500 text-xl font-semibold text-center my-8">{error}</div>
+          <div className="text-red-500 text-xl font-semibold text-center my-8" data-id="vocab-detail-error-message">{error}</div>
         ) : vocabs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-id="vocab-detail-cards-grid">
             {vocabs.map((vocab) => (
               <React.Fragment key={vocab.id}>
                 {/* Edit Form (conditional) */}
                 {editingVocabId === vocab.id && (
-                  <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                  <div className="col-span-1 md:col-span-2 lg:col-span-3" data-id={`vocab-edit-form-${vocab.id}`}>
                     {renderVocabForm(true, editFormData, handleEditFormChange, handleEditVocabSubmit)}
                   </div>
                 )}
                 
                 <div
                   className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300"
+                  data-id={`vocab-card-${vocab.id}`}
                 >
                   {/* Card Header */}
-                  <div className="px-6 py-4 bg-blue-50 flex justify-between items-center">
-                    <h2 className="text-2xl font-bold text-blue-800">{vocab.word}</h2>
+                  <div className="px-6 py-4 bg-blue-50 flex justify-between items-center" data-id={`vocab-card-header-${vocab.id}`}>
+                    <h2 className="text-2xl font-bold text-blue-800" data-id={`vocab-word-${vocab.id}`}>{vocab.word}</h2>
                     <button
                       onClick={() => handleUpdateVocab(vocab.id)}
                       className="text-sm px-3 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-200"
+                      data-id={`vocab-edit-button-${vocab.id}`}
                     >
                       Edit
                     </button>
                   </div>
                   {/* Card Body: Each field on the same row */}
-                  <div className="px-6 py-4 flex-grow space-y-3">
-                    <div className="flex">
-                      <span className="w-32 font-semibold text-gray-700">Translation:</span>
-                      <span className="text-gray-900">{vocab.translation}</span>
+                  <div className="px-6 py-4 flex-grow space-y-3" data-id={`vocab-card-body-${vocab.id}`}>
+                    <div className="flex" data-id={`vocab-translation-${vocab.id}`}>
+                      <span className="w-32 font-semibold text-gray-700" data-id={`vocab-translation-label-${vocab.id}`}>Translation:</span>
+                      <span className="text-gray-900" data-id={`vocab-translation-value-${vocab.id}`}>{vocab.translation}</span>
                     </div>
-                    <div className="flex">
-                      <span className="w-32 font-semibold text-gray-700">Part of Speech:</span>
-                      <span className="italic text-gray-800">{vocab.part_of_speech}</span>
+                    <div className="flex" data-id={`vocab-pos-${vocab.id}`}>
+                      <span className="w-32 font-semibold text-gray-700" data-id={`vocab-pos-label-${vocab.id}`}>Part of Speech:</span>
+                      <span className="italic text-gray-800" data-id={`vocab-pos-value-${vocab.id}`}>{vocab.part_of_speech}</span>
                     </div>
-                    <div className="flex">
-                      <span className="w-32 font-semibold text-gray-700">Definition:</span>
-                      <span className="text-gray-800">{vocab.definition}</span>
+                    <div className="flex" data-id={`vocab-definition-${vocab.id}`}>
+                      <span className="w-32 font-semibold text-gray-700" data-id={`vocab-definition-label-${vocab.id}`}>Definition:</span>
+                      <span className="text-gray-800" data-id={`vocab-definition-value-${vocab.id}`}>{vocab.definition}</span>
                     </div>
-                    <div className="flex">
-                      <span className="w-32 font-semibold text-gray-700">Example:</span>
-                      <span className="italic text-gray-700">{vocab.example_sentence}</span>
+                    <div className="flex" data-id={`vocab-example-${vocab.id}`}>
+                      <span className="w-32 font-semibold text-gray-700" data-id={`vocab-example-label-${vocab.id}`}>Example:</span>
+                      <span className="italic text-gray-700" data-id={`vocab-example-value-${vocab.id}`}>{vocab.example_sentence}</span>
                     </div>
                     {vocab.synonyms && (
-                      <div className="flex">
-                        <span className="w-32 font-semibold text-gray-700">Synonyms:</span>
-                        <span className="text-gray-800">{vocab.synonyms}</span>
+                      <div className="flex" data-id={`vocab-synonyms-${vocab.id}`}>
+                        <span className="w-32 font-semibold text-gray-700" data-id={`vocab-synonyms-label-${vocab.id}`}>Synonyms:</span>
+                        <span className="text-gray-800" data-id={`vocab-synonyms-value-${vocab.id}`}>{vocab.synonyms}</span>
                       </div>
                     )}
                     {vocab.antonyms && (
-                      <div className="flex">
-                        <span className="w-32 font-semibold text-gray-700">Antonyms:</span>
-                        <span className="text-gray-800">{vocab.antonyms}</span>
+                      <div className="flex" data-id={`vocab-antonyms-${vocab.id}`}>
+                        <span className="w-32 font-semibold text-gray-700" data-id={`vocab-antonyms-label-${vocab.id}`}>Antonyms:</span>
+                        <span className="text-gray-800" data-id={`vocab-antonyms-value-${vocab.id}`}>{vocab.antonyms}</span>
                       </div>
                     )}
                   </div>
                   {/* Card Footer */}
-                  <div className="px-6 py-3 bg-gray-100 border-t flex items-center">
-                    <span className="text-sm font-medium text-gray-700">Created by:</span>
-                    <span className="text-sm text-blue-600 font-semibold ml-2">
+                  <div className="px-6 py-3 bg-gray-100 border-t flex items-center" data-id={`vocab-card-footer-${vocab.id}`}>
+                    <span className="text-sm font-medium text-gray-700" data-id={`vocab-creator-label-${vocab.id}`}>Created by:</span>
+                    <span className="text-sm text-blue-600 font-semibold ml-2" data-id={`vocab-creator-value-${vocab.id}`}>
                       {vocab.student?.userFullName || 'Unknown'}
                     </span>
                   </div>
@@ -489,7 +502,7 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
             ))}
           </div>
         ) : (
-          <div className="text-gray-500 text-center my-16 text-xl">
+          <div className="text-gray-500 text-center my-16 text-xl" data-id="vocab-detail-empty-state">
             {searchQuery ? 'No vocabularies match your search.' : 'No vocabularies available in this list.'}
           </div>
         )}

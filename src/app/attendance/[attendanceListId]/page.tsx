@@ -164,75 +164,77 @@ const AttendanceDetailPage = ({ params }: { params: Promise<{ attendanceListId: 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-id="attendance-detail-page">
       <NavigationBar />
-      <div className="max-w-7xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6 text-black">Attendance Check</h1>
+      <div className="max-w-7xl mx-auto p-4" data-id="attendance-detail-container">
+        <h1 className="text-2xl font-bold mb-6 text-black" data-id="attendance-detail-title">Attendance Check</h1>
         
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center items-center h-64" data-id="attendance-detail-loading">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" data-id="attendance-detail-loading-spinner"></div>
           </div>
         ) : error ? (
-          <div className="text-red-500 text-lg font-semibold text-center my-8">
+          <div className="text-red-500 text-lg font-semibold text-center my-8" data-id="attendance-detail-error">
             {error}
           </div>
         ) : attendanceRecords.length > 0 ? (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <div className="bg-white shadow-md rounded-lg overflow-hidden" data-id="attendance-detail-table-container">
+            <table className="min-w-full divide-y divide-gray-200" data-id="attendance-detail-table">
+              <thead className="bg-gray-50" data-id="attendance-detail-table-header">
+                <tr data-id="attendance-detail-header-row">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-id="attendance-detail-student-header">
                     Student
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-id="attendance-detail-status-header">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200" data-id="attendance-detail-table-body">
                 {attendanceRecords.map((record) => {
                   const isCurrentUser = record.student_id === currentStudentId;
                   const highlightClass = isCurrentUser ? 'bg-blue-50' : '';
                   
                   return (
-                    <tr key={record.id} className={highlightClass}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
+                    <tr key={record.id} className={highlightClass} data-id={`attendance-record-row-${record.id}`}>
+                      <td className="px-6 py-4 whitespace-nowrap" data-id={`attendance-record-student-${record.id}`}>
+                        <div className="flex items-center" data-id={`attendance-student-info-${record.id}`}>
+                          <div className="flex-shrink-0 h-10 w-10" data-id={`attendance-student-avatar-container-${record.id}`}>
                             <img 
                               className="h-10 w-10 rounded-full" 
                               src={record.student?.profile_image || "/default-profile.png"} 
                               alt={record.student?.userFullName || 'Student'} 
+                              data-id={`attendance-student-avatar-${record.id}`}
                             />
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
+                          <div className="ml-4" data-id={`attendance-student-details-${record.id}`}>
+                            <div className="text-sm font-medium text-gray-900" data-id={`attendance-student-name-${record.id}`}>
                               {record.student?.userFullName || 'Unknown Student'}
-                              {isCurrentUser && <span className="ml-2 text-xs text-blue-600">(You)</span>}
+                              {isCurrentUser && <span className="ml-2 text-xs text-blue-600" data-id={`attendance-current-user-indicator-${record.id}`}>(You)</span>}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-gray-500" data-id={`attendance-student-nickname-${record.id}`}>
                               {record.student?.nickname || ''}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <label className={`inline-flex items-center ${!isCurrentUser ? 'cursor-not-allowed' : ''}`}>
+                      <td className="px-6 py-4 whitespace-nowrap" data-id={`attendance-record-status-${record.id}`}>
+                        <div className="flex items-center" data-id={`attendance-status-controls-${record.id}`}>
+                          <label className={`inline-flex items-center ${!isCurrentUser ? 'cursor-not-allowed' : ''}`} data-id={`attendance-checkbox-label-${record.id}`}>
                             <input
                               type="checkbox" 
                               className="form-checkbox h-5 w-5 text-blue-600"
                               checked={record.status === 'attended'}
                               onChange={(e) => handleAttendanceChange(record.id, e.target.checked, record.student_id)}
                               disabled={checkingAttendance || !isCurrentUser || attendanceListStatus === 'closed'}
+                              data-id={`attendance-checkbox-${record.id}`}
                             />
-                            <span className="ml-2 text-sm text-gray-700">
+                            <span className="ml-2 text-sm text-gray-700" data-id={`attendance-status-text-${record.id}`}>
                               {record.status === 'attended' ? 'Attended' : 'Absent'}
                             </span>
                           </label>
                           {(!isCurrentUser || attendanceListStatus === 'closed') && (
-                            <span className="ml-2 text-xs text-gray-500 italic">
+                            <span className="ml-2 text-xs text-gray-500 italic" data-id={`attendance-readonly-indicator-${record.id}`}>
                               {attendanceListStatus === 'closed' ? '(attendance closed)' : '(read-only)'}
                             </span>
                           )}
@@ -245,7 +247,7 @@ const AttendanceDetailPage = ({ params }: { params: Promise<{ attendanceListId: 
             </table>
           </div>
         ) : (
-          <div className="text-gray-500 text-center my-16 text-lg">
+          <div className="text-gray-500 text-center my-16 text-lg" data-id="attendance-detail-empty-state">
             No attendance records found
           </div>
         )}

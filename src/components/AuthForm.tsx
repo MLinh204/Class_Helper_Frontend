@@ -64,13 +64,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" data-id={`auth-form-${mode}`}>
       {mode === 'register' && (
         <>
-          <div>
+          <div data-id="auth-form-fullname-field">
             <label
               htmlFor="userFullName"
               className="block text-sm font-medium text-black"
+              data-id="auth-form-fullname-label"
             >
               Full Name
             </label>
@@ -82,13 +83,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
               onChange={handleChange}
               required
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+              data-id="auth-form-fullname-input"
             />
           </div>
-          <div className="flex space-x-4">
-            <div className="w-1/2">
+          <div className="flex space-x-4" data-id="auth-form-gender-nickname-row">
+            <div className="w-1/2" data-id="auth-form-gender-field">
               <label
                 htmlFor="gender"
                 className="block text-sm font-medium text-black"
+                data-id="auth-form-gender-label"
               >
                 Gender
               </label>
@@ -98,15 +101,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 value={formData.gender}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+                data-id="auth-form-gender-select"
               >
                 <option value="Boy">Boy</option>
                 <option value="Girl">Girl</option>
               </select>
             </div>
-            <div className="w-1/2">
+            <div className="w-1/2" data-id="auth-form-nickname-field">
               <label
                 htmlFor="nickname"
                 className="block text-sm font-medium text-black"
+                data-id="auth-form-nickname-label"
               >
                 Nickname
               </label>
@@ -117,14 +122,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 value={formData.nickname}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+                data-id="auth-form-nickname-input"
               />
             </div>
           </div>
-          <div className="flex space-x-4">
-            <div className="w-1/2">
+          <div className="flex space-x-4" data-id="auth-form-age-address-row">
+            <div className="w-1/2" data-id="auth-form-age-field">
               <label
                 htmlFor="age"
                 className="block text-sm font-medium text-black"
+                data-id="auth-form-age-label"
               >
                 Age
               </label>
@@ -136,12 +143,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 onChange={handleChange}
                 required
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+                data-id="auth-form-age-input"
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-1/2" data-id="auth-form-address-field">
               <label
                 htmlFor="address"
                 className="block text-sm font-medium text-black"
+                data-id="auth-form-address-label"
               >
                 Address
               </label>
@@ -153,16 +162,18 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 onChange={handleChange}
                 required
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+                data-id="auth-form-address-input"
               />
             </div>
           </div>
         </>
       )}
 
-      <div>
+      <div data-id="auth-form-username-field">
         <label
           htmlFor="username"
           className="block text-sm font-medium text-black"
+          data-id="auth-form-username-label"
         >
           Username
         </label>
@@ -174,12 +185,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           onChange={handleChange}
           required
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+          data-id="auth-form-username-input"
         />
       </div>
-      <div>
+      <div data-id="auth-form-password-field">
         <label
           htmlFor="password"
           className="block text-sm font-medium text-black"
+          data-id="auth-form-password-label"
         >
           Password
         </label>
@@ -191,13 +204,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           onChange={handleChange}
           required
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 text-gray-500"
+          data-id="auth-form-password-input"
         />
       </div>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      <div>
+      {error && <p className="text-red-500 text-sm" data-id="auth-form-error-message">{error}</p>}
+      <div data-id="auth-form-submit-section">
         <button
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition duration-300"
+          data-id={`auth-form-${mode}-button`}
         >
           {mode === 'login' ? 'Login' : 'Register'}
         </button>

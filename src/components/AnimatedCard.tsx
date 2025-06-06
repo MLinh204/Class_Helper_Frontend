@@ -7,7 +7,7 @@ interface AnimatedCardProps {
 
 const AnimatedCard: React.FC<AnimatedCardProps> = ({ children }) => {
   return (
-    <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 transform transition duration-500 hover:scale-105 animate-fadeIn">
+    <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 transform transition duration-500 hover:scale-105 animate-fadeIn" data-id="animated-card">
       {children}
     </div>
   );

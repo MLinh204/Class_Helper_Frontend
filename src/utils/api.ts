@@ -1,6 +1,7 @@
 import axios, { InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+const DICTIONARY_API_BASE_URL = 
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -54,5 +55,16 @@ export const createVocab = (id: number, data: Record<string, unknown>) => api.po
 export const updateVocab = (id: number, data: Record<string, unknown>) => api.put(`/vocab/${id}`, data);
 export const searchVocabViaListId = (id: number, query: string) => api.get(`/vocab/list/${id}/search?query=${query}`);
 export const sortVocabViaListId = (id: number, column: string, order: string) => api.get(`/vocab/list/${id}/sort?column=${column}&order=${order}`);
+
+
+//Dictionary
+export const getDictionaryByWord = (word: string) => {
+  return axios.get(`${DICTIONARY_API_BASE_URL}/dictionary/${word}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  });
+};
 
 export default api;

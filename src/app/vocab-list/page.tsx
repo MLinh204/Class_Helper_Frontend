@@ -66,38 +66,39 @@ const VocabListPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-id="vocab-list-page-container">
       <NavigationBar />
-      <div className="max-w-7xl mx-auto p-4">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Vocabulary Lists</h1>
-          <form onSubmit={handleSearch} className="mb-4">
+      <div className="max-w-7xl mx-auto p-4" data-id="vocab-list-main-content">
+        <div className="mb-6" data-id="vocab-list-header-section">
+          <h1 className="text-2xl font-bold text-gray-900" data-id="vocab-list-page-title">Vocabulary Lists</h1>
+          <form onSubmit={handleSearch} className="mb-4" data-id="vocab-list-search-form">
             <input
               type="text"
               placeholder="Search vocabulary lists..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              data-id="vocab-list-search-input"
             />
           </form>
         </div>
         
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center items-center h-64" data-id="vocab-list-loading-container">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" data-id="vocab-list-loading-spinner"></div>
           </div>
         ) : error ? (
-          <div className="text-red-500 text-lg font-semibold text-center my-8">
+          <div className="text-red-500 text-lg font-semibold text-center my-8" data-id="vocab-list-error-message">
             {error}
           </div>
         ) : filteredVocabLists.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-id="vocab-list-cards-grid">
             {filteredVocabLists.map((vocab) => (
               <VocabListCard key={vocab.id} vocab={vocab} />
             ))}
           </div>
         ) : (
-          <div className="text-gray-500 text-center my-16 text-lg">
+          <div className="text-gray-500 text-center my-16 text-lg" data-id="vocab-list-empty-state">
             {searchQuery ? 'No vocabulary lists match your search' : 'No vocabulary lists available'}
           </div>
         )}

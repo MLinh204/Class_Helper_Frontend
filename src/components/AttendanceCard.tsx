@@ -44,22 +44,23 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({ attendance }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="p-5">
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="text-lg font-semibold text-gray-800 truncate">{attendance.title}</h3>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(attendance.status)}`}>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300" data-id={`attendance-card-${attendance.id}`}>
+      <div className="p-5" data-id={`attendance-card-content-${attendance.id}`}>
+        <div className="flex justify-between items-start mb-3" data-id={`attendance-card-header-${attendance.id}`}>
+          <h3 className="text-lg font-semibold text-gray-800 truncate" data-id={`attendance-card-title-${attendance.id}`}>{attendance.title}</h3>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(attendance.status)}`} data-id={`attendance-card-status-${attendance.id}`}>
             {attendance.status}
           </span>
         </div>
         
-        <div className="flex items-center text-gray-500 text-sm">
+        <div className="flex items-center text-gray-500 text-sm" data-id={`attendance-card-date-section-${attendance.id}`}>
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             className="h-4 w-4 mr-1" 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
+            data-id={`attendance-card-date-icon-${attendance.id}`}
           >
             <path 
               strokeLinecap="round" 
@@ -68,13 +69,14 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({ attendance }) => {
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
             />
           </svg>
-          <span>{formatDate(attendance.created_at)}</span>
+          <span data-id={`attendance-card-date-text-${attendance.id}`}>{formatDate(attendance.created_at)}</span>
         </div>
         
-        <div className="mt-4 flex justify-end">
+        <div className="mt-4 flex justify-end" data-id={`attendance-card-actions-${attendance.id}`}>
             <a 
               href={`/attendance/${attendance.id}`}
               className="text-blue-600 hover:text-blue-800 text-sm font-medium focus:outline-none"
+              data-id={`attendance-card-check-link-${attendance.id}`}
             >
               Check Attendance
             </a>
