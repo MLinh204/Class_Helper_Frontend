@@ -14,7 +14,7 @@ import {
   sortVocabs
 } from '@/utils/api';
 import toast, { Toaster } from 'react-hot-toast';
-import { ChevronDownIcon, ArrowsUpDownIcon, PlusIcon } from '@heroicons/react/24/solid';
+import {  ArrowsUpDownIcon } from '@heroicons/react/24/solid';
 
 interface Vocab {
   id: number;
