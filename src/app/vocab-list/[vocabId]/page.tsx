@@ -9,8 +9,12 @@ import {
   getStudentById,
   searchVocabViaListId,
   createVocab,
-  updateVocab
+  updateVocab,
+  createVocabExternal,
+  sortVocabs
 } from '@/utils/api';
+import toast, { Toaster } from 'react-hot-toast';
+import { ChevronDownIcon, ArrowsUpDownIcon, PlusIcon } from '@heroicons/react/24/solid';
 
 interface Vocab {
   id: number;
@@ -47,6 +51,12 @@ const initialVocabForm = {
   antonyms: ''
 };
 
+// Initial form values for external vocab creation (simpler)
+const initialExternalVocabForm = {
+  word: '',
+  translation: ''
+};
+
 const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) => {
   // Unwrap the promise for params
   const resolvedParams = React.use(params);
@@ -65,6 +75,15 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
   const [editFormData, setEditFormData] = useState(initialVocabForm);
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // External vocab form state
+  const [showExternalForm, setShowExternalForm] = useState(false);
+  const [externalFormData, setExternalFormData] = useState(initialExternalVocabForm);
+  const [externalFormSubmitting, setExternalFormSubmitting] = useState(false);
+  const [externalFormError, setExternalFormError] = useState<string | null>(null);
+
+  // Sort state
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
 
   const fetchVocabList = async () => {
     try {
@@ -109,6 +128,21 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
     }
     fetchVocabList();
   }, [resolvedParams.vocabId, router]);
+
+  // Close sort dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[data-id="vocab-detail-sort-container"]')) {
+        setShowSortDropdown(false);
+      }
+    };
+
+    if (showSortDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showSortDropdown]);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -194,17 +228,16 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
     e.preventDefault();
     setFormSubmitting(true);
     setFormError(null);
-    
     try {
       const listId = parseInt(resolvedParams.vocabId);
       await createVocab(listId, createFormData);
-      
-      // Reset form and refresh vocab list
       setCreateFormData(initialVocabForm);
       setShowCreateForm(false);
       await fetchVocabList();
+      toast.success('Vocabulary created successfully');
     } catch (err) {
       console.error('Error creating vocabulary:', err);
+      toast.error('Failed to create vocabulary');
       setFormError('Failed to create vocabulary. Please try again.');
     } finally {
       setFormSubmitting(false);
@@ -215,22 +248,86 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
   const handleEditVocabSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingVocabId) return;
-    
     setFormSubmitting(true);
     setFormError(null);
-    
     try {
       await updateVocab(editingVocabId, editFormData);
-      
-      // Reset form and refresh vocab list
       setEditingVocabId(null);
       setEditFormData(initialVocabForm);
       await fetchVocabList();
+      toast.success('Vocabulary updated successfully');
     } catch (err) {
       console.error('Error updating vocabulary:', err);
+      toast.error('Failed to update vocabulary');
       setFormError('Failed to update vocabulary. Please try again.');
     } finally {
       setFormSubmitting(false);
+    }
+  };
+
+  // Handle toggling the external vocab form
+  const handleCreateExternalVocab = () => {
+    setShowExternalForm(!showExternalForm);
+    setExternalFormData(initialExternalVocabForm);
+    setShowCreateForm(false); // Close regular create form if open
+    setEditingVocabId(null); // Close any edit form
+    setExternalFormError(null);
+  };
+
+  // Handle external form input changes
+  const handleExternalFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setExternalFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Submit the external vocab form
+  const handleExternalVocabSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setExternalFormSubmitting(true);
+    setExternalFormError(null);
+    try {
+      const listId = parseInt(resolvedParams.vocabId);
+      await createVocabExternal(listId, externalFormData);
+      setExternalFormData(initialExternalVocabForm);
+      setShowExternalForm(false);
+      await fetchVocabList();
+      toast.success('Admin vocab created successfully');
+    } catch (err) {
+      console.error('Error creating external vocabulary:', err);
+      toast.error('Failed to create admin vocabulary');
+      setExternalFormError('Failed to create vocabulary. Please try again.');
+    } finally {
+      setExternalFormSubmitting(false);
+    }
+  };
+
+  // Handle sort functionality
+  const handleSort = async (column: string, order: string) => {
+    try {
+      const listId = parseInt(resolvedParams.vocabId);
+      const response = await sortVocabs(listId, column, order);
+      
+      // For each vocab in sorted results, fetch student details for creator
+      const vocabsWithCreators = await Promise.all(
+        response.data.map(async (vocab: Vocab) => {
+          try {
+            if (vocab.created_by) {
+              const studentResponse = await getStudentById(vocab.created_by);
+              return { ...vocab, student: studentResponse.data };
+            }
+            return vocab;
+          } catch (err) {
+            console.error(`Error fetching student ${vocab.created_by}:`, err);
+            return { ...vocab, student: { userFullName: 'Unknown' } };
+          }
+        })
+      );
+      setVocabs(vocabsWithCreators);
+      setShowSortDropdown(false);
+      setError(null);
+    } catch (err) {
+      console.error('Error sorting vocabularies:', err);
+      setError('An error occurred while sorting.');
     }
   };
 
@@ -387,7 +484,78 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
     );
   };
 
+  // Render external vocab form (simplified)
+  const renderExternalVocabForm = () => {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-purple-200" data-id="vocab-external-form">
+        <h2 className="text-xl font-bold text-purple-800 mb-4" data-id="vocab-external-form-title">
+          Create Vocabulary (Admin)
+        </h2>
+        
+        {externalFormError && (
+          <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4" data-id="vocab-external-form-error">
+            {externalFormError}
+          </div>
+        )}
+        
+        <form onSubmit={handleExternalVocabSubmit} className="space-y-4" data-id="vocab-external-form-element">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-id="vocab-external-form-grid">
+            {/* Word */}
+            <div data-id="vocab-external-form-word-field">
+              <label className="block text-gray-700 font-medium mb-1" data-id="vocab-external-form-word-label">Word</label>
+              <input
+                type="text"
+                name="word"
+                value={externalFormData.word}
+                onChange={handleExternalFormChange}
+                required
+                className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                data-id="vocab-external-form-word-input"
+              />
+            </div>
+            
+            {/* Translation */}
+            <div data-id="vocab-external-form-translation-field">
+              <label className="block text-gray-700 font-medium mb-1" data-id="vocab-external-form-translation-label">Translation</label>
+              <input
+                type="text"
+                name="translation"
+                value={externalFormData.translation}
+                onChange={handleExternalFormChange}
+                required
+                className="text-gray-500 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                data-id="vocab-external-form-translation-input"
+              />
+            </div>
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-2" data-id="vocab-external-form-buttons">
+            <button
+              type="button"
+              onClick={handleCreateExternalVocab}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+              disabled={externalFormSubmitting}
+              data-id="vocab-external-form-cancel-button"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className={`px-4 py-2 ${externalFormSubmitting ? 'bg-purple-400' : 'bg-purple-600'} text-white rounded hover:bg-purple-700`}
+              disabled={externalFormSubmitting}
+              data-id="vocab-external-form-submit-button"
+            >
+              {externalFormSubmitting ? 'Creating...' : 'Create Vocabulary'}
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   return (
+   <>
+    <Toaster position="top-right" />
     <div className="min-h-screen bg-gray-50" data-id="vocab-detail-page-container">
       <NavigationBar />
       {/* Hero Section */}
@@ -417,6 +585,98 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
           >
             Create New Vocab
           </button>
+          <button
+            onClick={handleCreateExternalVocab}
+            className="px-6 py-4 bg-purple-600 text-white font-semibold rounded-lg shadow hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            data-id="vocab-detail-create-admin-button"
+          >
+            Create Vocab Admin
+          </button>
+          
+          {/* Sort Button with Dropdown */}
+          <div className="relative" data-id="vocab-detail-sort-container">
+            <button
+              onClick={() => setShowSortDropdown(!showSortDropdown)}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700 flex items-center gap-2"
+              data-id="vocab-detail-sort-button"
+            >
+              <ArrowsUpDownIcon className="w-5 h-5" />
+              Sort
+            </button>
+            
+            {/* Sort Dropdown */}
+            {showSortDropdown && (
+              <div 
+                className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-10"
+                data-id="vocab-detail-sort-dropdown"
+              >
+                <div className="py-2" data-id="vocab-detail-sort-options">
+                  {/* Created Student */}
+                  <div className="px-4 py-2 border-b border-gray-100" data-id="vocab-sort-created-student-section">
+                    <div className="font-semibold text-gray-700 mb-2" data-id="vocab-sort-created-student-label">Created Student</div>
+                    <div className="flex gap-2" data-id="vocab-sort-created-student-options">
+                      <button
+                        onClick={() => handleSort('created_by', 'ASC')}
+                        className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition duration-200"
+                        data-id="vocab-sort-created-student-asc"
+                      >
+                        Ascending
+                      </button>
+                      <button
+                        onClick={() => handleSort('created_by', 'DESC')}
+                        className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition duration-200"
+                        data-id="vocab-sort-created-student-desc"
+                      >
+                        Descending
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Created Date */}
+                  <div className="px-4 py-2 border-b border-gray-100" data-id="vocab-sort-created-date-section">
+                    <div className="font-semibold text-gray-700 mb-2" data-id="vocab-sort-created-date-label">Created Date</div>
+                    <div className="flex gap-2" data-id="vocab-sort-created-date-options">
+                      <button
+                        onClick={() => handleSort('created_at', 'ASC')}
+                        className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition duration-200"
+                        data-id="vocab-sort-created-date-asc"
+                      >
+                        Ascending
+                      </button>
+                      <button
+                        onClick={() => handleSort('created_at', 'DESC')}
+                        className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition duration-200"
+                        data-id="vocab-sort-created-date-desc"
+                      >
+                        Descending
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Word */}
+                  <div className="px-4 py-2" data-id="vocab-sort-word-section">
+                    <div className="font-semibold text-gray-700 mb-2" data-id="vocab-sort-word-label">Word</div>
+                    <div className="flex gap-2" data-id="vocab-sort-word-options">
+                      <button
+                        onClick={() => handleSort('word', 'ASC')}
+                        className="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition duration-200"
+                        data-id="vocab-sort-word-asc"
+                      >
+                        Ascending
+                      </button>
+                      <button
+                        onClick={() => handleSort('word', 'DESC')}
+                        className="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition duration-200"
+                        data-id="vocab-sort-word-desc"
+                      >
+                        Descending
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       
@@ -425,11 +685,23 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
         {showCreateForm && renderVocabForm(false, createFormData, handleCreateFormChange, handleCreateVocabSubmit)}
       </div>
 
+      {/* External Vocab Form (conditional) */}
+      <div className="max-w-7xl mx-auto px-6" data-id="vocab-detail-external-form-section">
+        {showExternalForm && renderExternalVocabForm()}
+      </div>
+
       {/* Vocabulary Cards */}
       <div className="max-w-7xl mx-auto px-6 pb-12" data-id="vocab-detail-cards-section">
         {loading ? (
-          <div className="flex justify-center items-center h-64" data-id="vocab-detail-loading-container">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500" data-id="vocab-detail-loading-spinner"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-pulse" data-id="vocab-detail-loading-skeleton">
+            {[...Array(6)].map((_, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-6 space-y-4">
+                <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            ))}
           </div>
         ) : error ? (
           <div className="text-red-500 text-xl font-semibold text-center my-8" data-id="vocab-detail-error-message">{error}</div>
@@ -508,6 +780,7 @@ const VocabDetailPage = ({ params }: { params: Promise<{ vocabId: string }> }) =
         )}
       </div>
     </div>
+   </>
   );
 };
 
